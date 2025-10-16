@@ -76,7 +76,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           <Avatar className="h-20 w-20" data-testid="user-avatar">
             <AvatarImage src={userData.avatarUrl} alt={userData.name} />
             <AvatarFallback className="bg-emerald-600 text-white text-xl">
-              {userData.name.split(' ').map(n => n[0]).join('')}
+              {userData.firstName?.[0]}{userData.lastName?.[0]}
             </AvatarFallback>
           </Avatar>
           <div>
