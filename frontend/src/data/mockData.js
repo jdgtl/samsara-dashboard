@@ -2,9 +2,13 @@
 
 export const userData = {
   id: "u_234",
-  name: "Zahan Billimoria",
   firstName: "Zahan",
-  avatarUrl: "https://placehold.co/96x96",
+  lastName: "Billimoria",
+  displayName: "Zahan B.",
+  name: "Zahan Billimoria",
+  avatarUrl: null, // Can be URL or null for fallback initials
+  avatarType: "initials", // "initials", "emoji", or "upload"
+  avatarEmoji: null, // Selected emoji/icon if avatarType is "emoji"
   memberSince: "2023-11-02"
 };
 
