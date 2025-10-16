@@ -5,16 +5,35 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ExternalLink, Upload } from 'lucide-react';
+import { Upload, Mountain, TreePine, Tent, Compass, Flag, Target, Zap, Wind, Sun, Waves, Snowflake } from 'lucide-react';
 import { userData } from '@/data/mockData';
 
 const AccountDetails = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    name: userData.name,
+    firstName: userData.firstName,
+    lastName: userData.lastName,
+    displayName: userData.displayName,
     email: 'zahan@samsara.com',
     phone: '+1 (555) 123-4567'
   });
+  const [avatarType, setAvatarType] = useState(userData.avatarType || 'initials');
+  const [selectedEmoji, setSelectedEmoji] = useState(userData.avatarEmoji);
+
+  // Outdoor-themed avatar options
+  const avatarOptions = [
+    { icon: Mountain, label: 'Mountain', color: 'bg-stone-600' },
+    { icon: TreePine, label: 'Pine Tree', color: 'bg-emerald-700' },
+    { icon: Tent, label: 'Tent', color: 'bg-amber-600' },
+    { icon: Compass, label: 'Compass', color: 'bg-blue-600' },
+    { icon: Flag, label: 'Flag', color: 'bg-red-600' },
+    { icon: Target, label: 'Target', color: 'bg-orange-600' },
+    { icon: Zap, label: 'Lightning', color: 'bg-yellow-600' },
+    { icon: Wind, label: 'Wind', color: 'bg-cyan-600' },
+    { icon: Sun, label: 'Sun', color: 'bg-yellow-500' },
+    { icon: Waves, label: 'Waves', color: 'bg-blue-500' },
+    { icon: Snowflake, label: 'Snowflake', color: 'bg-sky-400' },
+  ];
 
   const handleSave = () => {
     alert('Profile changes would be saved here');
@@ -23,7 +42,9 @@ const AccountDetails = () => {
 
   const handleCancel = () => {
     setFormData({
-      name: userData.name,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      displayName: userData.displayName,
       email: 'zahan@samsara.com',
       phone: '+1 (555) 123-4567'
     });
@@ -36,10 +57,32 @@ const AccountDetails = () => {
 
   const handleUploadAvatar = () => {
     alert('Avatar upload interface would open here');
+    setAvatarType('upload');
   };
 
-  const handleManageInSettings = () => {
-    alert('Would redirect to WooCommerce account settings');
+  const handleSelectEmoji = (option) => {
+    setSelectedEmoji(option);
+    setAvatarType('emoji');
+  };
+
+  const getCurrentAvatar = () => {
+    if (avatarType === 'emoji' && selectedEmoji) {
+      const Icon = selectedEmoji.icon;
+      return (
+        <div className={`h-24 w-24 rounded-full flex items-center justify-center ${selectedEmoji.color}`}>
+          <Icon className="h-12 w-12 text-white" />
+        </div>
+      );
+    }
+    
+    return (
+      <Avatar className="h-24 w-24" data-testid="profile-avatar">
+        <AvatarImage src={userData.avatarUrl} alt={`${formData.firstName} ${formData.lastName}`} />
+        <AvatarFallback className="bg-emerald-600 text-white text-2xl">
+          {formData.firstName?.[0]}{formData.lastName?.[0]}
+        </AvatarFallback>
+      </Avatar>
+    );
   };
 
   return (
@@ -54,17 +97,13 @@ const AccountDetails = () => {
       <Card data-testid="profile-picture-section">
         <CardHeader>
           <CardTitle>Profile Picture</CardTitle>
+          <CardDescription>Choose an avatar or upload your own image</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
           <div className="flex items-center gap-6">
-            <Avatar className="h-24 w-24" data-testid="profile-avatar">
-              <AvatarImage src={userData.avatarUrl} alt={userData.name} />
-              <AvatarFallback className="bg-emerald-600 text-white text-2xl">
-                {userData.name.split(' ').map(n => n[0]).join('')}
-              </AvatarFallback>
-            </Avatar>
+            {getCurrentAvatar()}
             <div className="space-y-2">
-              <p className="text-sm text-stone-600">Upload a new profile picture</p>
+              <p className="text-sm text-stone-600">Current avatar type: {avatarType === 'initials' ? 'Initials' : avatarType === 'emoji' ? 'Icon' : 'Custom upload'}</p>
               <Button 
                 onClick={handleUploadAvatar}
                 variant="outline"
@@ -74,6 +113,33 @@ const AccountDetails = () => {
                 <Upload className="h-4 w-4" />
                 Upload New Photo
               </Button>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Outdoor-themed avatar options */}
+          <div className="space-y-3">
+            <Label>Or choose an outdoor icon</Label>
+            <div className="grid grid-cols-6 gap-3">
+              {avatarOptions.map((option) => {
+                const Icon = option.icon;
+                const isSelected = avatarType === 'emoji' && selectedEmoji?.label === option.label;
+                return (
+                  <button
+                    key={option.label}
+                    onClick={() => handleSelectEmoji(option)}
+                    className={`
+                      ${option.color} rounded-full p-4 hover:scale-110 transition-transform
+                      ${isSelected ? 'ring-4 ring-emerald-500 ring-offset-2' : ''}
+                    `}
+                    title={option.label}
+                    data-testid={`avatar-option-${option.label.toLowerCase()}`}
+                  >
+                    <Icon className="h-6 w-6 text-white" />
+                  </button>
+                );
+              })}
             </div>
           </div>
         </CardContent>
@@ -101,14 +167,38 @@ const AccountDetails = () => {
         <CardContent>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="displayName">Display Name</Label>
               <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                id="displayName"
+                value={formData.displayName}
+                onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
                 disabled={!isEditing}
-                data-testid="name-input"
+                placeholder="How you'd like to be called"
+                data-testid="display-name-input"
               />
+              <p className="text-xs text-stone-500">This is how your name will appear throughout the site</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="firstName">First Name</Label>
+                <Input
+                  id="firstName"
+                  value={formData.firstName}
+                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  disabled={!isEditing}
+                  data-testid="first-name-input"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Last Name</Label>
+                <Input
+                  id="lastName"
+                  value={formData.lastName}
+                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  disabled={!isEditing}
+                  data-testid="last-name-input"
+                />
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email Address</Label>
@@ -184,29 +274,6 @@ const AccountDetails = () => {
                 Change Password
               </Button>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* WooCommerce Link */}
-      <Card className="bg-stone-50" data-testid="woocommerce-link-section">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold text-stone-900 mb-1">Advanced Account Settings</h3>
-              <p className="text-sm text-stone-600">
-                For more account options and preferences, visit the store settings.
-              </p>
-            </div>
-            <Button 
-              variant="outline"
-              onClick={handleManageInSettings}
-              className="gap-2"
-              data-testid="manage-in-settings-btn"
-            >
-              Edit in Store Settings
-              <ExternalLink className="h-4 w-4" />
-            </Button>
           </div>
         </CardContent>
       </Card>
