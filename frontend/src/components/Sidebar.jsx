@@ -72,7 +72,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         </button>
 
         {/* User Profile Section */}
-        <div className="p-6 space-y-3" data-testid="user-profile-section">
+        <div className="p-6 space-y-3 flex flex-col items-center text-center" data-testid="user-profile-section">
           <Avatar className="h-20 w-20" data-testid="user-avatar">
             <AvatarImage src={userData.avatarUrl} alt={userData.name} />
             <AvatarFallback className="bg-emerald-600 text-white text-xl">
