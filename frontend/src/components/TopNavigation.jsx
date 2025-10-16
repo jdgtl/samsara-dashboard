@@ -244,7 +244,12 @@ const TopNavigation = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center" data-testid="nav-logo">
-            <span className="text-xl font-bold text-stone-900">SAMSARA</span>
+            <img 
+              src="https://customer-assets.emergentagent.com/job_quick-dash-6/artifacts/9sp1lhlg_samsara-logo-white-name.png" 
+              alt="Samsara" 
+              className="h-8 w-auto brightness-0"
+              style={{ filter: 'brightness(0)' }}
+            />
           </Link>
 
           {/* Desktop Navigation */}
