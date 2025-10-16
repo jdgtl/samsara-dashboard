@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 import { CreditCard, Plus, Trash2 } from 'lucide-react';
 import { paymentMethods } from '@/data/mockData';
 
 const Payments = () => {
+  const [useBillingAsShipping, setUseBillingAsShipping] = useState(true);
+
   const handleAddPaymentMethod = () => {
     alert('Add payment method interface would open here');
   };
@@ -21,8 +25,16 @@ const Payments = () => {
     alert(`Payment method ${methodId} would be set as default`);
   };
 
+  const handleEditBillingAddress = () => {
+    alert('Edit billing address interface would open here');
+  };
+
+  const handleEditShippingAddress = () => {
+    alert('Edit shipping address interface would open here');
+  };
+
   return (
-    <div className="max-w-4xl mx-auto space-y-6" data-testid="payments-page">
+    <div className="max-w-7xl mx-auto space-y-6" data-testid="payments-page">
       {/* Header */}
       <div className="space-y-2">
         <h1 className="text-3xl font-bold text-stone-900">Payment Methods</h1>
@@ -110,25 +122,89 @@ const Payments = () => {
         </CardContent>
       </Card>
 
-      {/* Billing Address */}
-      <Card data-testid="billing-address-section">
-        <CardHeader>
-          <CardTitle>Billing Address</CardTitle>
-          <CardDescription>Address associated with your payment methods</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2 text-stone-900">
-            <p className="font-medium">Zahan Billimoria</p>
-            <p>123 Mountain View Drive</p>
-            <p>Boulder, CO 80301</p>
-            <p>United States</p>
-          </div>
-          <Separator className="my-4" />
-          <Button variant="outline" data-testid="edit-billing-address-btn">
-            Edit Address
-          </Button>
-        </CardContent>
-      </Card>
+      {/* Billing and Shipping Addresses */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Billing Address */}
+        <Card data-testid="billing-address-section">
+          <CardHeader>
+            <CardTitle>Billing Address</CardTitle>
+            <CardDescription>Address associated with your payment methods</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2 text-stone-900">
+              <p className="font-medium">Zahan Billimoria</p>
+              <p>123 Mountain View Drive</p>
+              <p>Boulder, CO 80301</p>
+              <p>United States</p>
+            </div>
+            <Separator className="my-4" />
+            <Button 
+              variant="outline" 
+              onClick={handleEditBillingAddress}
+              data-testid="edit-billing-address-btn"
+            >
+              Edit Address
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Shipping Address */}
+        <Card data-testid="shipping-address-section">
+          <CardHeader>
+            <CardTitle>Shipping Address</CardTitle>
+            <CardDescription>Address for order deliveries</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {/* Checkbox to use billing as shipping */}
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="use-billing-as-shipping" 
+                  checked={useBillingAsShipping}
+                  onCheckedChange={setUseBillingAsShipping}
+                  data-testid="use-billing-as-shipping-checkbox"
+                />
+                <Label 
+                  htmlFor="use-billing-as-shipping" 
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                >
+                  Use billing address as shipping address
+                </Label>
+              </div>
+
+              <Separator />
+
+              {useBillingAsShipping ? (
+                <div className="space-y-2 text-stone-900">
+                  <p className="font-medium">Zahan Billimoria</p>
+                  <p>123 Mountain View Drive</p>
+                  <p>Boulder, CO 80301</p>
+                  <p>United States</p>
+                  <p className="text-sm text-stone-500 italic mt-2">Same as billing address</p>
+                </div>
+              ) : (
+                <div className="space-y-2 text-stone-900">
+                  <p className="font-medium">Zahan Billimoria</p>
+                  <p>456 Summit Trail</p>
+                  <p>Denver, CO 80202</p>
+                  <p>United States</p>
+                </div>
+              )}
+
+              <Separator className="my-4" />
+              
+              <Button 
+                variant="outline"
+                onClick={handleEditShippingAddress}
+                disabled={useBillingAsShipping}
+                data-testid="edit-shipping-address-btn"
+              >
+                Edit Shipping Address
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
