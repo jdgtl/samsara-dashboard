@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { CreditCard, ExternalLink, Plus, Trash2 } from 'lucide-react';
+import { CreditCard, Plus, Trash2 } from 'lucide-react';
 import { paymentMethods } from '@/data/mockData';
 
 const Payments = () => {
@@ -19,10 +19,6 @@ const Payments = () => {
 
   const handleSetDefault = (methodId) => {
     alert(`Payment method ${methodId} would be set as default`);
-  };
-
-  const handleManageInWooCommerce = () => {
-    alert('Would redirect to WooCommerce payment settings');
   };
 
   return (
@@ -131,29 +127,6 @@ const Payments = () => {
           <Button variant="outline" data-testid="edit-billing-address-btn">
             Edit Address
           </Button>
-        </CardContent>
-      </Card>
-
-      {/* WooCommerce Link */}
-      <Card className="bg-stone-50" data-testid="woocommerce-link-section">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold text-stone-900 mb-1">Advanced Payment Settings</h3>
-              <p className="text-sm text-stone-600">
-                For more payment options and detailed billing history, visit the store settings.
-              </p>
-            </div>
-            <Button 
-              variant="outline"
-              onClick={handleManageInWooCommerce}
-              className="gap-2"
-              data-testid="manage-in-woocommerce-btn"
-            >
-              Manage in Store
-              <ExternalLink className="h-4 w-4" />
-            </Button>
-          </div>
         </CardContent>
       </Card>
     </div>
